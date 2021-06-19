@@ -1,7 +1,6 @@
 package solid.inject.core
 
 class CoreProviderRegistry(
-  private val bindings: MutableMap<String, String> = LinkedHashMap(),
   private val registrations: MutableMap<String, Provider> = LinkedHashMap(),
   private val scopes: MutableMap<String, MutableSet<String>> = LinkedHashMap()) : ProviderRegistry
 {
@@ -10,7 +9,7 @@ class CoreProviderRegistry(
     abstractionId: String,
     implementerId: String)
   {
-    bindings[abstractionId] = implementerId
+    registrations[abstractionId] = BindingProvider(implementerId)
   }
 
   override fun register(
@@ -35,8 +34,7 @@ class CoreProviderRegistry(
 
   override fun gimme(id: String): Provider?
   {
-    val providerId = bindings[id] ?: id
-    val provider = registrations[providerId]
+    val provider = registrations[id]
 
     // Potential for optional call here
     return ScopedProvider.from(scopesFor(id), provider)
@@ -45,7 +43,6 @@ class CoreProviderRegistry(
   override fun fork(): ProviderRegistry
   {
     return CoreProviderRegistry(
-      LinkedHashMap(bindings),
       LinkedHashMap(registrations),
       LinkedHashMap(scopes))
   }

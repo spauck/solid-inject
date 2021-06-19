@@ -38,7 +38,7 @@ class InjectorForking
     val facade2 = facade1.fork()
     facade1.register(InjectorForking::C)
 
-    assertThatExceptionOfType(KotlinNullPointerException::class.java)
+    assertThatExceptionOfType(NullPointerException::class.java)
       .isThrownBy { facade2.gimme<C>() }
   }
 
@@ -49,7 +49,7 @@ class InjectorForking
     val facade2 = facade1.fork()
     facade2.register(InjectorForking::C)
 
-    assertThatExceptionOfType(KotlinNullPointerException::class.java)
+    assertThatExceptionOfType(NullPointerException::class.java)
       .isThrownBy { facade1.gimme<C>() }
   }
 
